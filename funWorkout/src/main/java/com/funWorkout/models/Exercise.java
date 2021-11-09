@@ -22,20 +22,33 @@ public class Exercise {
     @Column(name = "exercisedescription")
     private String exerciseDescription;
 
+    /* Intensity 'Codes'
+    1 Easy
+    2 Medium
+    3 Hard
+    4 Warmup
+    5 Cooldown
+     */
+    @Column(name= "exerciseintensity")
+    private int exerciseIntensity;
+
+
     public Exercise() {
     }
 
-    public Exercise(String exerciseName, ExerciseTarget exerciseTarget, String exerciseDescription ) {
+    public Exercise(String exerciseName, ExerciseTarget exerciseTarget, String exerciseDescription, int exerciseIntensity) {
         this.exerciseName = exerciseName;
         this.exerciseTarget = exerciseTarget;
         this.exerciseDescription = exerciseDescription;
+        this.exerciseIntensity = exerciseIntensity;
     }
 
-    public Exercise(int exerciseId, String exerciseName, ExerciseTarget exerciseTarget, String exerciseDescription) {
+    public Exercise(int exerciseId, String exerciseName, ExerciseTarget exerciseTarget, String exerciseDescription, int exerciseIntensity) {
         this.exerciseId = exerciseId;
         this.exerciseName = exerciseName;
         this.exerciseTarget = exerciseTarget;
         this.exerciseDescription = exerciseDescription;
+        this.exerciseIntensity = exerciseIntensity;
     }
 
     public int getExerciseId() {
@@ -70,17 +83,25 @@ public class Exercise {
         this.exerciseDescription = exerciseDescription;
     }
 
+    public int getExerciseIntensity() {
+        return exerciseIntensity;
+    }
+
+    public void setExerciseIntensity(int exerciseIntensity) {
+        this.exerciseIntensity = exerciseIntensity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Exercise exercise = (Exercise) o;
-        return getExerciseId() == exercise.getExerciseId() && Objects.equals(getExerciseName(), exercise.getExerciseName()) && Objects.equals(getExerciseTarget(), exercise.getExerciseTarget()) && Objects.equals(getExerciseDescription(), exercise.getExerciseDescription());
+        return exerciseId == exercise.exerciseId && exerciseIntensity == exercise.exerciseIntensity && Objects.equals(exerciseName, exercise.exerciseName) && Objects.equals(exerciseTarget, exercise.exerciseTarget) && Objects.equals(exerciseDescription, exercise.exerciseDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExerciseId(), getExerciseName(), getExerciseTarget(), getExerciseDescription());
+        return Objects.hash(exerciseId, exerciseName, exerciseTarget, exerciseDescription, exerciseIntensity);
     }
 
     @Override
@@ -90,6 +111,7 @@ public class Exercise {
                 ", exerciseName='" + exerciseName + '\'' +
                 ", exerciseTarget=" + exerciseTarget +
                 ", exerciseDescription='" + exerciseDescription + '\'' +
+                ", exerciseIntensity=" + exerciseIntensity +
                 '}';
     }
 }
