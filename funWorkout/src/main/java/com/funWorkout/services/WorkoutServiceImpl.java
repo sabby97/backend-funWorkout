@@ -1,29 +1,64 @@
 package com.funWorkout.services;
 
 import com.funWorkout.models.ExerciseWorkoutJoin;
+import com.funWorkout.models.User;
 import com.funWorkout.models.WorkoutPlan;
 import com.funWorkout.repositories.ExerciseWorkoutJoinRepo;
-import com.funWorkout.repositories.WorkoutRepo;
+import com.funWorkout.repositories.WorkoutPlanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class WorkoutServiceImpl implements WorkoutService{
+public class WorkoutServiceImpl implements WorkoutService {
 
     @Autowired
-    WorkoutRepo wr;
+    WorkoutPlanRepo workoutPlanRepo;
 
     @Autowired
-    ExerciseWorkoutJoinRepo ewjr;
+    ExerciseWorkoutJoinRepo exerciseWorkoutJoinRepo;
 
 
     @Override
     public List<WorkoutPlan> getAllWorkouts() {
-        List<WorkoutPlan> returnedList = (List<WorkoutPlan>) wr.findAll();
-        System.out.println(returnedList);
-        return returnedList;
+        List<WorkoutPlan> returnedList = (List<WorkoutPlan>) workoutPlanRepo.findAll();
+
+        if(returnedList != null){
+            for (WorkoutPlan workout : returnedList){
+                User user = new User();
+                user.setUserId(workout.getUser().getUserId());
+                workout.setUser(user);
+            }
+            return returnedList;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public WorkoutPlan getWorkout(int workoutId) {
+        if(workoutPlanRepo.findById(workoutId).isPresent()){
+            WorkoutPlan w = workoutPlanRepo.findById(workoutId).get();
+            User u = new User();
+            u.setUserId(w.getUser().getUserId());
+            w.setUser(u);
+            return w;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public WorkoutPlan getWorkoutById(int userId) {
+        return null;
+    }
+
+    @Override
+    public List<WorkoutPlan> getWorkout(String Workoutname, int userId) {
+        return null;
     }
 
     @Override

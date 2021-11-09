@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WorkoutRepo extends CrudRepository<WorkoutPlan, Integer> {
+public interface WorkoutPlanRepo extends CrudRepository<WorkoutPlan, Integer> {
 }
