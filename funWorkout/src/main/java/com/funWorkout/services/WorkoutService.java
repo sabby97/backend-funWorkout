@@ -10,9 +10,9 @@ public interface WorkoutService {
 
     public WorkoutPlan getWorkout(int workoutId);
 
-    public WorkoutPlan getWorkoutById(int userId);
+    public List<WorkoutPlan> getWorkoutById(int userId);
 
-    public List<WorkoutPlan> getWorkout(String Workoutname, int userId);
+    public List<WorkoutPlan> getWorkout(String workoutName, int userId);
 
     public WorkoutPlan addWorkout(WorkoutPlan workout);
 

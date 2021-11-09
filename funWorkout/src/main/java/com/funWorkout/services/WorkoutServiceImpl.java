@@ -1,13 +1,12 @@
 package com.funWorkout.services;
 
-import com.funWorkout.models.ExerciseWorkoutJoin;
-import com.funWorkout.models.User;
-import com.funWorkout.models.WorkoutPlan;
+import com.funWorkout.models.*;
 import com.funWorkout.repositories.ExerciseWorkoutJoinRepo;
 import com.funWorkout.repositories.WorkoutPlanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,9 +25,8 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         if(returnedList != null){
             for (WorkoutPlan workout : returnedList){
-                User user = new User();
-                user.setUserId(workout.getUser().getUserId());
-                workout.setUser(user);
+                userCleaner(workout);
+                listUpdater(workout);
             }
             return returnedList;
         }
@@ -41,9 +39,8 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutPlan getWorkout(int workoutId) {
         if(workoutPlanRepo.findById(workoutId).isPresent()){
             WorkoutPlan w = workoutPlanRepo.findById(workoutId).get();
-            User u = new User();
-            u.setUserId(w.getUser().getUserId());
-            w.setUser(u);
+            userCleaner(w);
+            listUpdater(w);
             return w;
         }
         else{
@@ -52,13 +49,36 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public WorkoutPlan getWorkoutById(int userId) {
-        return null;
+    public List<WorkoutPlan> getWorkoutById(int userId) {
+        List<WorkoutPlan> returnedList = workoutPlanRepo.findByUserUserId(userId);
+
+        if(returnedList != null){
+            for (WorkoutPlan workout : returnedList){
+                userCleaner(workout);
+                listUpdater(workout);
+            }
+            return returnedList;
+        }
+        else{
+            return null;
+        }
+
     }
 
     @Override
-    public List<WorkoutPlan> getWorkout(String Workoutname, int userId) {
-        return null;
+    public List<WorkoutPlan> getWorkout(String workoutName, int userId) {
+        List<WorkoutPlan> returnedList = workoutPlanRepo.findByWorkoutNameAndUserUserId(workoutName,userId);
+
+        if(returnedList != null){
+            for (WorkoutPlan workout : returnedList){
+                userCleaner(workout);
+                listUpdater(workout);
+            }
+            return returnedList;
+        }
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -111,6 +131,29 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         //Delete all joins by workoutPlanId (which is the 'id' argument)
 
+    }
+
+    //function removes the private information from the user object inside the workoutplan object
+    private void userCleaner(WorkoutPlan w){
+        User user = new User();
+        user.setUserId(w.getUser().getUserId());
+        w.setUser(user);
+    }
+
+    //function sorts and then iterates throught the list of exerciseWorkoutjoin and add the each individual exercise to exerciseList
+    //and sets the exerciseWorkoutjoin list to null
+    private void listUpdater(WorkoutPlan w){
+        System.out.println(w.getExerciseWorkoutJoinList());
+
+        w.getExerciseWorkoutJoinList().sort(new SortByOrder()); //sort the list
+        System.out.println(w.getExerciseWorkoutJoinList());
+
+        List<Exercise> exercises = new ArrayList<>();
+        for(ExerciseWorkoutJoin myJoin : w.getExerciseWorkoutJoinList()) { //add the exercises to the list
+            exercises.add(myJoin.getExercise());
+        }
+        w.setExerciseWorkoutJoinList(null); //null the joinlist
+        w.setExerciseList(exercises); //set the exerciseList
     }
 
 }
