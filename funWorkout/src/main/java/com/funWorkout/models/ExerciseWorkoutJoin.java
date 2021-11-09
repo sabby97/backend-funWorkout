@@ -16,27 +16,30 @@ public class ExerciseWorkoutJoin {
     @JoinColumn(name = "exercise_fk", referencedColumnName = "exerciseid")
     private Exercise exercise;
 
-    @ManyToOne
-    @JoinColumn(name = "workout_fk", referencedColumnName = "workoutplanid")
-    private WorkoutPlan workoutPlan;
-
-    @Column(name = " workoutorder")
+    @Column(name = "workoutorder")
     private int workoutOrder;
+
+
+
+    @Column(name = "workout_id")
+    private int workoutId;
+
+
 
     public ExerciseWorkoutJoin() {
     }
 
-    public ExerciseWorkoutJoin(Exercise exercise, WorkoutPlan workoutPlan, int workoutOrder) {
+    public ExerciseWorkoutJoin(Exercise exercise, int workoutOrder, int workoutId) {
         this.exercise = exercise;
-        this.workoutPlan = workoutPlan;
         this.workoutOrder = workoutOrder;
+        this.workoutId = workoutId;
     }
 
-    public ExerciseWorkoutJoin(int workoutJoinId, Exercise exercise, WorkoutPlan workoutPlan, int workoutOrder) {
+    public ExerciseWorkoutJoin(int workoutJoinId, Exercise exercise, int workoutOrder, int workoutId) {
         this.workoutJoinId = workoutJoinId;
         this.exercise = exercise;
-        this.workoutPlan = workoutPlan;
         this.workoutOrder = workoutOrder;
+        this.workoutId = workoutId;
     }
 
     public int getWorkoutJoinId() {
@@ -55,14 +58,6 @@ public class ExerciseWorkoutJoin {
         this.exercise = exercise;
     }
 
-    public WorkoutPlan getWorkoutPlan() {
-        return workoutPlan;
-    }
-
-    public void setWorkoutPlan(WorkoutPlan workoutPlan) {
-        this.workoutPlan = workoutPlan;
-    }
-
     public int getWorkoutOrder() {
         return workoutOrder;
     }
@@ -71,17 +66,25 @@ public class ExerciseWorkoutJoin {
         this.workoutOrder = workoutOrder;
     }
 
+    public int getWorkoutId() {
+        return workoutId;
+    }
+
+    public void setWorkoutId(int workoutId) {
+        this.workoutId = workoutId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExerciseWorkoutJoin that = (ExerciseWorkoutJoin) o;
-        return getWorkoutJoinId() == that.getWorkoutJoinId() && getWorkoutOrder() == that.getWorkoutOrder() && Objects.equals(getExercise(), that.getExercise()) && Objects.equals(getWorkoutPlan(), that.getWorkoutPlan());
+        return workoutJoinId == that.workoutJoinId && workoutOrder == that.workoutOrder && workoutId == that.workoutId && Objects.equals(exercise, that.exercise);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getWorkoutJoinId(), getExercise(), getWorkoutPlan(), getWorkoutOrder());
+        return Objects.hash(workoutJoinId, exercise, workoutOrder, workoutId);
     }
 
     @Override
@@ -89,8 +92,8 @@ public class ExerciseWorkoutJoin {
         return "ExerciseWorkoutJoin{" +
                 "workoutJoinId=" + workoutJoinId +
                 ", exercise=" + exercise +
-                ", workoutPlan=" + workoutPlan +
                 ", workoutOrder=" + workoutOrder +
+                ", workoutId=" + workoutId +
                 '}';
     }
 }
