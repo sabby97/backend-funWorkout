@@ -69,7 +69,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         newWorkout.setUser(workout.getUser());
 
         //Now save the workout
-        newWorkout =  wr.save(newWorkout);
+        newWorkout =  workoutPlanRepo.save(newWorkout);
 
         //Replace with saveall?
         //Save the individual joins
@@ -84,7 +84,7 @@ public class WorkoutServiceImpl implements WorkoutService {
             newJoin.setWorkoutOrder(orderNumber);
             orderNumber++;
             //Save it
-            ewjr.save(newJoin);
+            exerciseWorkoutJoinRepo.save(newJoin);
         }
 
         return newWorkout;
