@@ -11,8 +11,6 @@ create table users
 	username varchar(50),
 	password varchar(50),
 	isAdmin boolean
-	
-
 );
 
 create table exerciseTargetRef
@@ -28,8 +26,6 @@ create table exercises
 	exerciseIntensity int,
 	exercisePrimaryTarget_fk int references exerciseTargetRef(exerciseTargetID), 
 	exerciseDescription varchar(500)
-	
- 
 );
 
 
@@ -45,9 +41,9 @@ create table workoutPlans
 create table exerciseWorkoutJoin
 (	
 	workout_join_id serial primary key,
+	workout_id int references workoutPlans(workoutPlanID),
 	exercise_fk int references exercises(exerciseID),
-	workout_fk int references workoutPlans(workoutPlanID),
-	workoutOrder int
+	workoutOrder int 
 );
 	
 
@@ -80,3 +76,22 @@ values	(default, 'gymleader', 'guest', true),
 		(default, 'exerciseerica', 'password', false),
 		(default, 'fitfreddy', 'password', false),
 		(default, 'gameongarry', 'password', false);
+		
+insert into exercises values  (default, 'Warmup placeholder', 4, 1, 'This is an example warmup');
+insert into exercises values  (default, 'Warmup placeholder 2', 4, 1, 'This is another example warmup');
+insert into exercises values  (default, 'Cooldown placeholder', 5, 1, 'This is an example cooldown');
+insert into exercises values  (default, 'Cooldown placeholder 2', 5, 1, 'This is another example cooldown');
+
+
+insert into workoutPlans values (default, 'Workout 1', 1, 0, false);
+insert into exerciseWorkoutJoin values (default, 1, 10, 1);
+insert into exerciseWorkoutJoin values (default, 1, 3, 2);
+insert into exerciseWorkoutJoin values (default, 1, 5, 3);
+insert into exerciseWorkoutJoin values (default, 1, 6, 4);
+insert into exerciseWorkoutJoin values (default, 1, 12, 5);
+
+select * from exercisetargetref;
+select * from exercises;
+select * from workoutplans;
+select * from users;
+select * from exerciseWorkoutJoin;
