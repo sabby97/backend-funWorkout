@@ -1,5 +1,6 @@
 package com.funWorkout.models;
 
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -18,12 +19,10 @@ public class ExerciseWorkoutJoin {
 
     @Column(name = "workoutorder")
     private int workoutOrder;
-
-
+    
 
     @Column(name = "workout_id")
     private int workoutId;
-
 
 
     public ExerciseWorkoutJoin() {
@@ -96,4 +95,5 @@ public class ExerciseWorkoutJoin {
                 ", workoutId=" + workoutId +
                 '}';
     }
+
 }
