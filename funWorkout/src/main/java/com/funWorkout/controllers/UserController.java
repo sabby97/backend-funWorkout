@@ -19,11 +19,17 @@ public class UserController {
         return userService.getUser(Integer.parseInt(userId));
     }
 
+
     @GetMapping("/users/find")
     public User getUserByNamePass(@RequestParam String userName, @RequestParam String password) {
 
         User user = userService.getUser(userName, password);
-        return user;
+
+        if(user != null) {
+            return user;
+        } else {
+            return new User();
+        }
     }
 
     @GetMapping("/users")
