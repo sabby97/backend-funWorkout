@@ -15,5 +15,10 @@ public class CommandJsonWorkoutGenerator {
         this.intensity = intensity;
     }
 
-
+    @Override
+    public String toString() {
+        return "CommandJsonWorkoutGenerator{" +
+                "intensity=" + intensity +
+                '}';
+    }
 }

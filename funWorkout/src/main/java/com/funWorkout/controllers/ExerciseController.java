@@ -47,8 +47,8 @@ public class ExerciseController {
         return es.generateRandomWorkout();
     }
 
-    @GetMapping("/exercises/customList")
-    public List<Exercise> getRandomWorkout(@RequestBody CommandJsonWorkoutGenerator cmdJson) {
+    @PostMapping(value="/exercises/customList", consumes = "application/json", produces = "application/json")
+    public List<Exercise> getCustomWorkout(@RequestBody CommandJsonWorkoutGenerator cmdJson) {
         return es.generateCustomWorkout(cmdJson.getIntensity());
     }
 
