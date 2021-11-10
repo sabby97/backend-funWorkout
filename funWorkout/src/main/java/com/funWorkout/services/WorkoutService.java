@@ -8,6 +8,8 @@ public interface WorkoutService {
 
     public List<WorkoutPlan> getAllWorkouts();
 
+    public List<WorkoutPlan> getAllRecWorkouts();
+
     public WorkoutPlan getWorkout(int workoutId);
 
     public List<WorkoutPlan> getWorkoutById(int userId);

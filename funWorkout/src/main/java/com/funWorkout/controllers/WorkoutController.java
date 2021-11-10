@@ -20,8 +20,14 @@ public class WorkoutController {
         return workoutService.getAllWorkouts();
     }
 
+    //get all the Recommended workouts
+    @GetMapping("/workouts/rec")
+    public List<WorkoutPlan> getAllRecWorkouts() {
+        return workoutService.getAllRecWorkouts();
+    }
+
     //get all workouts by workoutId
-    @GetMapping("/users/{userId}/workouts/{workoutId}")
+    @GetMapping("/workouts/{workoutId}")
     public WorkoutPlan getWorkout(@PathVariable("workoutId") String workoutId){
         return workoutService.getWorkout(Integer.parseInt(workoutId));
     }
@@ -38,10 +44,25 @@ public class WorkoutController {
         return workoutService.getWorkout(workoutName, Integer.parseInt(userId));
     }
 
-//    @PostMapping(value = "/workouts", consumes = "application/json", produces = "application/json")
-//    public WorkoutPlan addWorkout(@RequestBody WorkoutPlan workout) {
-//        return workoutService.addWorkout(workout);
-//    }
+    //To add a workout
+    @PostMapping(value = "/workouts", consumes = "application/json", produces = "application/json")
+    public WorkoutPlan addWorkout(@RequestBody WorkoutPlan workout) {
+        return workoutService.addWorkout(workout);
+    }
+
+    //To update a workout
+    @PutMapping(value = "/workouts/{workoutId}", consumes = "application/json", produces = "application/json")
+    public  WorkoutPlan updateWorkout(@RequestBody WorkoutPlan workout, @PathVariable("workoutId") String workoutId){
+        workout.setWorkoutplanId(Integer.parseInt(workoutId));
+        System.out.println("In controller checking workoutPlanId" + workout.getWorkoutplanId() + workout.getWorkoutplanId() );
+        return workoutService.updateWorkout(workout);
+    }
+
+    //To delete a workout
+    @DeleteMapping(value = "/workouts/{workoutId}")
+    public void deleteWorkout(@PathVariable("workoutId") String workoutId){
+        workoutService.deleteWorkout(Integer.parseInt(workoutId));
+    }
 
     //Need a get one, update, and delete route
 }

@@ -5,6 +5,7 @@ import com.funWorkout.repositories.ExerciseWorkoutJoinRepo;
 import com.funWorkout.repositories.WorkoutPlanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,23 @@ public class WorkoutServiceImpl implements WorkoutService {
     public List<WorkoutPlan> getAllWorkouts() {
         List<WorkoutPlan> returnedList = (List<WorkoutPlan>) workoutPlanRepo.findAll();
 
-        if(returnedList != null){
+        if(!returnedList.isEmpty()){
+            for (WorkoutPlan workout : returnedList){
+                userCleaner(workout);
+                listUpdater(workout);
+            }
+            return returnedList;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public List<WorkoutPlan> getAllRecWorkouts() {
+        List<WorkoutPlan> returnedList = (List<WorkoutPlan>) workoutPlanRepo.findByIsRecommendedTrue();
+
+        if(returnedList != null && !returnedList.isEmpty()){
             for (WorkoutPlan workout : returnedList){
                 userCleaner(workout);
                 listUpdater(workout);
@@ -52,7 +69,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public List<WorkoutPlan> getWorkoutById(int userId) {
         List<WorkoutPlan> returnedList = workoutPlanRepo.findByUserUserId(userId);
 
-        if(returnedList != null){
+        if(returnedList != null && !returnedList.isEmpty()){
             for (WorkoutPlan workout : returnedList){
                 userCleaner(workout);
                 listUpdater(workout);
@@ -69,7 +86,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public List<WorkoutPlan> getWorkout(String workoutName, int userId) {
         List<WorkoutPlan> returnedList = workoutPlanRepo.findByWorkoutNameAndUserUserId(workoutName,userId);
 
-        if(returnedList != null){
+        if(returnedList != null && !returnedList.isEmpty()){
             for (WorkoutPlan workout : returnedList){
                 userCleaner(workout);
                 listUpdater(workout);
@@ -91,46 +108,59 @@ public class WorkoutServiceImpl implements WorkoutService {
         //Now save the workout
         newWorkout =  workoutPlanRepo.save(newWorkout);
 
-        //Replace with saveall?
         //Save the individual joins
         //Each should have an exercise, the order and workout id can be derived
-        int orderNumber = 1;
-        for(ExerciseWorkoutJoin singleJoin: workout.getExerciseWorkoutJoinList()) {
-            //Create a new join
-            ExerciseWorkoutJoin newJoin = new ExerciseWorkoutJoin();
-            //Set the properties
-            newJoin.setWorkoutId(newWorkout.getWorkoutplanId());
-            newJoin.setExercise(singleJoin.getExercise());
-            newJoin.setWorkoutOrder(orderNumber);
-            orderNumber++;
-            //Save it
-            exerciseWorkoutJoinRepo.save(newJoin);
-        }
+//        int orderNumber = 1;
+//        for(Exercise exercise : workout.getExerciseList()) {
+//            //Create a new join
+//            ExerciseWorkoutJoin newJoin = new ExerciseWorkoutJoin();
+//            //Set the properties
+//            newJoin.setWorkoutId(newWorkout.getWorkoutplanId());
+//            newJoin.setExercise(exercise);
+//            newJoin.setWorkoutOrder(orderNumber);
+//            orderNumber++;
+//            //Save it
+//            exerciseWorkoutJoinRepo.save(newJoin);
+//        }
+
+        List<ExerciseWorkoutJoin> myJoins = exercisesToJoins(workout.getExerciseList(), newWorkout.getWorkoutplanId());
+
+        exerciseWorkoutJoinRepo.saveAll(myJoins);
+
+        newWorkout.setExerciseWorkoutJoinList(myJoins);
 
         return newWorkout;
     }
 
     @Override
+    @Transactional
     public WorkoutPlan updateWorkout(WorkoutPlan workout) {
-
-        WorkoutPlan updatedWorkout = new WorkoutPlan();
-
-        //Update workout values
+        //System.out.println("From workoutPlan object : " + workout.getWorkoutplanId());
 
         //Delete all joins by workoutPlanId (which is the 'id' argument)
-        //Create new ones with correct ordering
+        exerciseWorkoutJoinRepo.deleteByWorkoutId(workout.getWorkoutplanId());
 
-        return updatedWorkout;
+        //create a list of exerciseWorkoutjoin
+        List<ExerciseWorkoutJoin> temp = exercisesToJoins(workout.getExerciseList(), workout.getWorkoutplanId());
 
+        //save all the joins
+        exerciseWorkoutJoinRepo.saveAll(temp);
+
+        //set the join to the saved join
+        workout.setExerciseWorkoutJoinList(temp);
+
+        //return the workout
+        return  workoutPlanRepo.save(workout);
     }
 
     @Override
-    public void deleteWorkout(int id) {
+    @Transactional
+    public void deleteWorkout(int workoutId) {
+        //Delete all joins by workoutPlanId (which is the 'id' argument)
+        exerciseWorkoutJoinRepo.deleteByWorkoutId(workoutId);
 
         //Delete workout
-
-        //Delete all joins by workoutPlanId (which is the 'id' argument)
-
+        workoutPlanRepo.deleteById(workoutId);
     }
 
     //function removes the private information from the user object inside the workoutplan object
@@ -143,10 +173,10 @@ public class WorkoutServiceImpl implements WorkoutService {
     //function sorts and then iterates throught the list of exerciseWorkoutjoin and add the each individual exercise to exerciseList
     //and sets the exerciseWorkoutjoin list to null
     private void listUpdater(WorkoutPlan w){
-        System.out.println(w.getExerciseWorkoutJoinList());
+        //System.out.println(w.getExerciseWorkoutJoinList());
 
         w.getExerciseWorkoutJoinList().sort(new SortByOrder()); //sort the list
-        System.out.println(w.getExerciseWorkoutJoinList());
+        //System.out.println(w.getExerciseWorkoutJoinList());
 
         List<Exercise> exercises = new ArrayList<>();
         for(ExerciseWorkoutJoin myJoin : w.getExerciseWorkoutJoinList()) { //add the exercises to the list
@@ -155,5 +185,23 @@ public class WorkoutServiceImpl implements WorkoutService {
         w.setExerciseWorkoutJoinList(null); //null the joinlist
         w.setExerciseList(exercises); //set the exerciseList
     }
+
+    //return a exerciseWorkoutJoin list from a list of exercises
+    List<ExerciseWorkoutJoin> exercisesToJoins(List<Exercise> exercises, int workoutId){
+        List<ExerciseWorkoutJoin> joins = new ArrayList<>();
+        int orderNumber = 1;
+        for(Exercise exercise : exercises) {
+            //Create a new join
+            ExerciseWorkoutJoin newJoin = new ExerciseWorkoutJoin();
+            //Set the properties
+            newJoin.setWorkoutId(workoutId);
+            newJoin.setExercise(exercise);
+            newJoin.setWorkoutOrder(orderNumber);
+            joins.add(newJoin);
+            orderNumber++;
+        }
+        return joins;
+    }
+
 
 }
