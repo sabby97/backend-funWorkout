@@ -167,6 +167,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     private void userCleaner(WorkoutPlan w){
         User user = new User();
         user.setUserId(w.getUser().getUserId());
+        user.setAdmin(w.getUser().isAdmin());
         w.setUser(user);
     }
 
