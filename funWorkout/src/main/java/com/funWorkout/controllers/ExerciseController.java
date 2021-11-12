@@ -49,7 +49,7 @@ public class ExerciseController {
 
     @PostMapping(value="/exercises/customList", consumes = "application/json", produces = "application/json")
     public List<Exercise> getCustomWorkout(@RequestBody CommandJsonWorkoutGenerator cmdJson) {
-        return es.generateCustomWorkout(cmdJson.getIntensity());
+        return es.generateCustomWorkout(cmdJson.getWorkoutLength(), cmdJson.getMinIntensity(), cmdJson.getMaxIntensity(), cmdJson.getSelectedExerciseTargetIds(), cmdJson.isWarmUp(), cmdJson.isCoolDown());
     }
 
 }
