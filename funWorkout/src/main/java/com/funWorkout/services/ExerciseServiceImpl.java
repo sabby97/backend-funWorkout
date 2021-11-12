@@ -2,6 +2,7 @@ package com.funWorkout.services;
 
 import com.funWorkout.models.Exercise;
 import com.funWorkout.repositories.ExerciseRepo;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,20 +88,21 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public List<Exercise> generateCustomWorkout(int desiredIntensity) {
+    public List<Exercise> generateCustomWorkout(int workoutLength, int minIntensity, int maxIntensity, List<Boolean> desiredExerciseTargetIds, boolean warmUp, boolean coolDown) {
 
-        //How many exercises to add to the workout
-        int workoutLength = 3;
 
         List<Exercise> allExercises = (List<Exercise>) er.findAll();
         List<Exercise> validExercises = new ArrayList<>();
         List<Exercise> validWarmups = new ArrayList<>();
         List<Exercise> validCooldowns = new ArrayList<>();
 
-        //Only get the exercises of the correct intensity
         for (Exercise exercise: allExercises) {
-            if(exercise.getExerciseIntensity() == desiredIntensity) {
+            //Only get the exercises of the correct intensity and is a valid exercise target
+            if(exercise.getExerciseIntensity() >= minIntensity && exercise.getExerciseIntensity() <= maxIntensity
+                    && desiredExerciseTargetIds.get(exercise.getExerciseTarget().getExerciseTargetId() - 1)) {
+
                 validExercises.add(exercise);
+
             } else if (exercise.getExerciseIntensity() == 4){
                 //Get warmups
                 validWarmups.add(exercise);
@@ -114,20 +116,27 @@ public class ExerciseServiceImpl implements ExerciseService {
         int listLength = validExercises.size();
 
         //Add a warmup
-        int randomWarmupIndex = (int) Math.floor(Math.random()*validWarmups.size());
-        returnedExercises.add(validWarmups.get(randomWarmupIndex));
-
-        //Each loop add a random exercise from the list
-        for(int i = 0; i < workoutLength; i++) {
-            int randomNum = (int) Math.floor(Math.random()*listLength);
-            returnedExercises.add(validExercises.get(randomNum));
+        if(warmUp){
+            int randomWarmupIndex = (int) Math.floor(Math.random()*validWarmups.size());
+            returnedExercises.add(validWarmups.get(randomWarmupIndex));
         }
 
-        //Add a cooldown
-        int randomCooldownIndex = (int) Math.floor(Math.random()*validCooldowns.size());
-        returnedExercises.add(validCooldowns.get(randomCooldownIndex));
+        //If no valid exercises exist, don't try to add any
+        if(listLength > 0) {
+            //Each loop add a random exercise from the list
+            for(int i = 0; i < workoutLength; i++) {
+                int randomNum = (int) Math.floor(Math.random()*listLength);
+                returnedExercises.add(validExercises.get(randomNum));
+            }
+        }
 
-        System.out.println(returnedExercises);
+
+        //Add a cooldown
+        if(coolDown) {
+            int randomCooldownIndex = (int) Math.floor(Math.random()*validCooldowns.size());
+            returnedExercises.add(validCooldowns.get(randomCooldownIndex));
+        }
+
         return returnedExercises;
     }
 }
