@@ -19,7 +19,7 @@ public interface ExerciseService {
 
     public List<Exercise> generateRandomWorkout();
 
-    public List<Exercise> generateCustomWorkout(int desiredIntensity);
+    public List<Exercise> generateCustomWorkout(int workoutLength, int minIntensity, int maxIntensity, List<Boolean> desiredExerciseTargetIds, boolean warmUp, boolean coolDown);
 
 
 }
