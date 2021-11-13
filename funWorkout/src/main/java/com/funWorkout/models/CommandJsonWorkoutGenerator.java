@@ -2,7 +2,7 @@ package com.funWorkout.models;
 
 //Not managed by spring - this is used to identify information from the 'generate custom workout' inputs
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 
 import java.util.List;
 

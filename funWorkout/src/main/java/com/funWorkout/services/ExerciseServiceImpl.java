@@ -2,7 +2,6 @@ package com.funWorkout.services;
 
 import com.funWorkout.models.Exercise;
 import com.funWorkout.repositories.ExerciseRepo;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

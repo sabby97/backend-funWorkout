@@ -40,12 +40,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
-        if (user != null) {
-            return userRepo.save(user);
-        } else {
-            return null;
-        }
+       User userInDB = userRepo.findByUserNameAndPassword( user.getUserName(), user.getPassword() );
+       System.out.println(userInDB);
 
+       // If this user is not in the database then add her
+       if( userInDB == null ) {
+
+            if (user != null) {
+                return userRepo.save(user);
+            } else {
+                return null;
+            }
+        } return null;
     }
 
     @Override
