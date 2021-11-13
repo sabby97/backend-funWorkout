@@ -2,8 +2,6 @@ package com.funWorkout.models;
 
 //Not managed by spring - this is used to identify information from the 'generate custom workout' inputs
 
-
-
 import java.util.List;
 
 public class CommandJsonWorkoutGenerator {
