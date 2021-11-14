@@ -30,7 +30,7 @@ public class FunWorkoutRunner {
     @AfterClass
     public static void teardown() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }

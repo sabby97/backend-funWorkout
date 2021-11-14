@@ -5,7 +5,10 @@ import com.funWorkout.runners.FunWorkoutRunner;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
+
+import java.util.concurrent.TimeUnit;
 
 public class UserProfileStepImpl {
 
@@ -13,10 +16,21 @@ public class UserProfileStepImpl {
     public static WebDriver driver = FunWorkoutRunner.driver;
 
     // Scenario: A logged in user is able to logout
+    @When("User is logged in")
+    public void user_is_logged_in() {
+        driver.get("http://localhost:4200/");
+        funWorkoutMain.loginInUsernameInput.sendKeys("gymleader");
+        funWorkoutMain.loginInPasswordInput.sendKeys("guest");
+        funWorkoutMain.signInButton.click();
+
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        Assert.assertTrue(funWorkoutMain.signOutButton.isEnabled());
+    }
     @When("User clicks on logout button")
     public void user_clicks_on_logout_button() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        funWorkoutMain.signOutButton.click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        Assert.assertTrue(funWorkoutMain.signInButton.isEnabled());
     }
 
 

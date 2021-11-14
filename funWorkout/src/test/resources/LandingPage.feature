@@ -20,7 +20,7 @@ Feature: Landing page functionality
     When User inputs valid username
     And User inputs matching valid password
     And User clicks login
-    Then User is logged in
+    Then User becomes logged in
 
   #MVP
   Scenario: Log in fails when an invalid username is used
@@ -50,7 +50,7 @@ Feature: Landing page functionality
     And User inputs a password
     And User clicks submit new user info
     Then A new user account is created
-    And User is logged in
+    And User becomes logged in
 
   Scenario: A new user profile is invalid and not created
     Given User is on the landing page
