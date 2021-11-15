@@ -90,6 +90,42 @@ insert into exerciseWorkoutJoin values (default, 1, 5, 3);
 insert into exerciseWorkoutJoin values (default, 1, 6, 4);
 insert into exerciseWorkoutJoin values (default, 1, 12, 5);
 
+
+insert into workoutPlans values (default, 'Workout 3', 1, 30, true);
+insert into workoutPlans values (default, 'Workout 1', 2, 10, false);
+insert into workoutPlans values (default, 'Workout 2', 2, 30, false);
+insert into workoutPlans values (default, 'Workout 1', 3, 10, false);
+insert into workoutPlans values (default, 'Workout 3', 3, 10, false);
+insert into workoutPlans values (default, 'Workout 2', 4, 30, false);
+insert into workoutPlans values (default, 'Workout 4', 4, 20, true);
+insert into workoutPlans values (default, 'Workout 1', 5, 10, false);
+insert into workoutPlans values (default, 'Workout 7', 5, 40, true);
+insert into workoutPlans values (default, 'Workout 1', 6, 60, true);
+insert into workoutPlans values (default, 'Workout 1', 7, 70, true);
+insert into workoutPlans values (default, 'Workout 2', 7, 30, false);
+insert into workoutPlans values (default, 'Workout 1', 8, 10, false);
+
+
+insert into exerciseWorkoutJoin values (default, 2, 5, 1);
+insert into exerciseWorkoutJoin values (default, 2, 3, 2);
+insert into exerciseWorkoutJoin values (default, 2, 3, 3);
+insert into exerciseWorkoutJoin values (default, 3, 2, 1);
+insert into exerciseWorkoutJoin values (default, 3, 7, 2);
+insert into exerciseWorkoutJoin values (default, 3, 3, 3);
+insert into exerciseWorkoutJoin values (default, 4, 8, 1);
+insert into exerciseWorkoutJoin values (default, 4, 7, 2);
+insert into exerciseWorkoutJoin values (default, 4, 4, 3);
+insert into exerciseWorkoutJoin values (default, 5, 2, 1);
+insert into exerciseWorkoutJoin values (default, 5, 1, 2);
+insert into exerciseWorkoutJoin values (default, 5, 2, 3);
+insert into exerciseWorkoutJoin values (default, 6, 6, 1);
+insert into exerciseWorkoutJoin values (default, 6, 7, 2);
+insert into exerciseWorkoutJoin values (default, 7, 3, 1);
+insert into exerciseWorkoutJoin values (default, 8, 5, 1);
+insert into exerciseWorkoutJoin values (default, 8, 7, 2);
+insert into exerciseWorkoutJoin values (default, 8, 9, 3);
+
+
 select * from exercisetargetref;
 select * from exercises;
 select * from workoutplans;
