@@ -45,7 +45,7 @@ public class LandingPageStepImpl {
     @Then("User focuses on a randomly generated workout")
     public void user_focuses_on_a_randomly_generated_workout() {
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        Assert.assertTrue(funWorkoutMain.sampleWorkoutFocusDiv.isEnabled());
+        Assert.assertTrue(funWorkoutMain.sampleWorkoutFocusDivRand.isEnabled());
     }
 
 
@@ -77,7 +77,6 @@ public class LandingPageStepImpl {
     @When("User clicks login")
     public void user_clicks_login() {
         funWorkoutMain.signInButton.click();
-
     }
     @Then("User becomes logged in")
     public void user_becomes_logged_in() {
@@ -114,7 +113,8 @@ public class LandingPageStepImpl {
     }
     @Then("User does not log in")
     public void user_does_not_log_in() {
-        Assert.assertNull(jsExe.executeScript("return localStorage.getItem('userName')"));
+        String expectedValue = null;
+        Assert.assertEquals(String.valueOf(expectedValue), jsExe.executeScript("return localStorage.getItem('userName')"));
     }
 
 
@@ -127,54 +127,60 @@ public class LandingPageStepImpl {
 
 
     // Scenario: A new user profile can be created
-    @When("User clicks on create new user")
-    public void user_clicks_on_create_new_user() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
     @When("User inputs a username")
     public void user_inputs_a_username() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        funWorkoutMain.logInUserPanel.click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        Assert.assertTrue(funWorkoutMain.loginInUsernameInput.isEnabled());
+        funWorkoutMain.loginInUsernameInput.sendKeys("newTestUser");
     }
     @When("User inputs a password")
     public void user_inputs_a_password() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        funWorkoutMain.loginInPasswordInput.sendKeys("guestTest");
     }
     @When("User clicks submit new user info")
     public void user_clicks_submit_new_user_info() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        funWorkoutMain.signUpButton.click();
     }
     @Then("A new user account is created")
     public void a_new_user_account_is_created() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        wait.until(ExpectedConditions.alertIsPresent());
+
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+
+        driver.switchTo().alert().dismiss();
+        String expectedTest = "You have successfully signed up.  Please press Sign In to access your profile";
+        Assert.assertEquals(alertText, expectedTest);
     }
 
 
     // Scenario: A new user profile is invalid and not created
     @When("User inputs a username matching an existing username")
     public void user_inputs_a_username_matching_an_existing_username() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-    @Then("No user account is created")
-    public void no_user_account_is_created() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        funWorkoutMain.logInUserPanel.click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        Assert.assertTrue(funWorkoutMain.loginInUsernameInput.isEnabled());
+        funWorkoutMain.loginInUsernameInput.sendKeys("newTestUser");
     }
     @Then("User sees invalid username info message")
     public void user_sees_invalid_username_info_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        wait.until(ExpectedConditions.alertIsPresent());
+
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+
+        driver.switchTo().alert().dismiss();
+        String expectedTest = "You already have an account, please select Sign In.";
+        Assert.assertEquals(alertText, expectedTest);
     }
 
     // Scenario: A user is able to start a workout
     @Given("User is focused on a workout")
     public void user_is_focused_on_a_workout() {
-        // Write code here that turns the phrase above into concrete actions
+        funWorkoutMain.sampleWorkoutFocusDivRandLoggedIn.click();
     }
     @When("User clicks start workout")
     public void user_clicks_start_workout() {
